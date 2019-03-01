@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Route
+spec:
+  port:
+    targetPort: 9098
+  to:
+    kind: Service
+    name: inbound-rest
+    weight: 100
+  wildcardPolicy: None
+status: {}

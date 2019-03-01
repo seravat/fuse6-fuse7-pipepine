@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="customer-app-features" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
+  <feature name="customer-app-01" version="1.0">
+	<feature version="[2.12,3)">camel-core</feature>
+    <feature version="[2.12,3)">camel-spring</feature>
+    <feature version="[2.12,3)">camel-jaxb</feature>
+    <feature version="[2.12,3)">camel-soap</feature>
+    <bundle>mvn:com.customer.app/artifacts/1.0-SNAPSHOT</bundle>
+    <bundle>mvn:com.customer.app/mq-service/1.0-SNAPSHOT</bundle>
+    <bundle>mvn:com.customer.app/inbound/1.0-SNAPSHOT</bundle>
+    <bundle>mvn:com.customer.app/xlate/1.0-SNAPSHOT</bundle>
+    <bundle>mvn:com.customer.app/integration-test-server/1.0-SNAPSHOT</bundle>
+    <bundle>mvn:com.customer.app/outbound/1.0-SNAPSHOT</bundle>
+  </feature>
+</features>

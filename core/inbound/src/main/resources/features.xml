@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="06-inbound-lab-features" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
+  <feature name="06-inbound-lab" version="1.0">
+	<feature>camel-core</feature>
+    <feature>camel-soap</feature>
+    <feature>camel-core</feature>
+    <feature>camel-spring</feature>
+    <feature>camel-jaxb</feature>
+    <feature>camel-soap</feature>
+    <feature>activemq-camel</feature>
+    <bundle>mvn:com.customer.app/inbound/1.0-SNAPSHOT</bundle>
+  </feature>
+</features>
