@@ -1,0 +1,14 @@
+spec:
+    ports:
+    - name: fuse7cxfrest-http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: default
+      port: 8181
+      protocol: TCP
+      targetPort: 8181
+    - name: fuse7cxfrest-rest
+      port: 9098
+      protocol: TCP
+      targetPort: 9098

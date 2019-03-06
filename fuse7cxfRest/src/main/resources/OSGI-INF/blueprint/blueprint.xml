@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright 2005-2016 Red Hat, Inc.
+
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
+-->
+<!--
+   This is the OSGi Blueprint XML file defining the CXF JAX-RS beans.  Because the file is in the
+   OSGI-INF/blueprint directory inside our JAR, it will be automatically activated as soon as the artifact is installed.
+
+   The root element for any OSGi Blueprint file is 'blueprint' - you also see the namespace definitions for both the Blueprint
+   and the CXF JAX-RS namespaces.
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:cxf="http://cxf.apache.org/blueprint/core"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.5.0"
+    xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd            http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd            http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd       http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd       http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
+    <bean class="com.redhat.usecase.service.impl.DEIMServiceImpl" id="demographicImpl"/>
+    <bean class="org.apache.activemq.camel.component.ActiveMQComponent" id="activemqService">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin"/>
+    </bean>
+    <!-- JAXRS providers -->
+    <!--
+      The <jaxrs:server/> element sets up our JAX-RS services.  It defines:
+      - the server's address, '/crm', relative to the default CXF servlet URI
+        with the default settings, the server will be running on 'http://localhost:8181/cxf/crm'
+      - a list of service beans
+        in this example, we refer to another bean defined in this Blueprint XML file with a <ref/> element
+    -->
+    <jaxrs:server address="http://localhost:9098/cxf/demos"
+        id="demoGraphicsService" publish="true">
+        <jaxrs:serviceBeans>
+            <ref bean="demographicImpl"/>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+        <cxf:properties>
+            <entry key="skip.default.json.provider.registration" value="true"/>
+        </cxf:properties>
+    </cxf:bus>
+    <camelContext id="inboundRest" xmlns="http://camel.apache.org/schema/blueprint">
+        <dataFormats>
+            <jaxb contextPath="com.customer.app" id="personFormat" partClass="com.customer.app.Person"/>
+        </dataFormats>
+        <!-- this is the route called by DEIMServiceImpl -->
+        <route id="handleRest">
+            <from id="_from1" uri="direct:integrateRoute"/>
+            <log id="_InboundIn" message=">> Received message from REST service: ${body}"/>
+            <choice id="_choice1">
+                <when id="_when1">
+                    <simple>${header.METHOD} contains 'add'</simple>
+                    <log id="_log1" loggingLevel="DEBUG" message="Starting add..."/>
+                    <to id="_to1" uri="direct:addPerson"/>
+                </when>
+                <when id="_when2">
+                    <simple>${header.METHOD} contains 'update'</simple>
+                    <log id="_log2" loggingLevel="DEBUG" message="Starting update..."/>
+                    <to id="_to2" uri="direct:updatePerson"/>
+                </when>
+                <when id="_when3">
+                    <simple>${header.METHOD} contains 'search'</simple>
+                    <log id="_log3" loggingLevel="DEBUG" message="Starting search..."/>
+                    <to id="_to3" uri="direct:searchPerson"/>
+                </when>
+            </choice>
+            <!--             <marshal id="_marshal1" ref="personFormat"/>
+            <log id="_logInboundOut" message=">> Sent Message to queue q.empi.deim.in : ${body}"/>
+            <to id="_toActiveMQ" uri="activemqService:q.empi.deim.in?disableReplyTo=true&amp;asyncConsumer=true"/> -->
+        </route>
+        <route id="addRoute">
+            <from id="_from2" uri="direct:addPerson"/>
+            <log id="_log4" loggingLevel="DEBUG" message="Marshalling obj to xml..."/>
+            <marshal id="_marshal1" ref="personFormat"/>
+            <log id="_log5" loggingLevel="DEBUG" message="Sending to queue..."/>
+            <to id="_toActiveMQ1" uri="activemqService:q.empi.deim.in?disableReplyTo=true&amp;asyncConsumer=true"/>
+        </route>
+        <route id="updateRoute">
+            <from id="_from3" uri="direct:updatePerson"/>
+            <log id="_log6" loggingLevel="DEBUG" message="Marshalling obj to xml..."/>
+            <marshal id="_marshal2" ref="personFormat"/>
+            <log id="_log7" loggingLevel="DEBUG" message="Sending to queue..."/>
+            <to id="_toActiveMQ2" uri="activemqService:q.empi.deim.in?disableReplyTo=true&amp;asyncConsumer=true"/>
+        </route>
+        <route id="searchRoute">
+            <from id="_from4" uri="direct:searchPerson"/>
+            <log id="_log8" loggingLevel="DEBUG" message="Marshalling obj to xml..."/>
+            <marshal id="_marshal3" ref="personFormat"/>
+            <log id="_log9" loggingLevel="DEBUG" message="Sending to queue..."/>
+            <to id="_toActiveMQ3" uri="activemqService:q.empi.deim.in?disableReplyTo=true&amp;asyncConsumer=true"/>
+        </route>
+    </camelContext>
+</blueprint>
