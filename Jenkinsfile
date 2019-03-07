@@ -39,6 +39,9 @@ pipeline {
     agent {
         label "master"
     }
+    tools {
+        maven 'Maven 3.6.0'
+    }
 
     environment {
         GIT_SSL_NO_VERIFY = true
