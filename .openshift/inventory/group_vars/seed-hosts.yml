@@ -1,0 +1,17 @@
+pipelines_namespace: cicd
+sample_pipeline_vars:
+  NAME: sample-app
+  PIPELINE_SOURCE_REPOSITORY_URL: "https://github.com/welshstew/e2e-pipeline-sample.git"
+  PIPELINE_SOURCE_REPOSITORY_REF: master
+  PIPELINE_SOURCE_SECRET: github-secret
+
+openshift_cluster_content:
+- object: Pipeline
+  content:
+  - name: Sample Application Pipeline
+    template: "{{ inventory_dir }}/templates/ocp-pipeline.yml"
+    action: create
+    params_from_vars: "{{ sample_pipeline_vars }}"
+    namespace: "{{ pipelines_namespace }}"
+    tags:
+    - sample-pipeline

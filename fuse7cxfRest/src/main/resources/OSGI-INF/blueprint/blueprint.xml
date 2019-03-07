@@ -45,7 +45,7 @@
     <jaxrs:server address="http://localhost:9098/cxf/demos"
         id="demoGraphicsService" publish="true">
         <jaxrs:serviceBeans>
-            <ref bean="demographicImpl"/>
+            <ref component-id="demographicImpl"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
     <cxf:bus>

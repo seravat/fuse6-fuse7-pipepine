@@ -1,0 +1,26 @@
+---
+
+- name: "Copy file to remote location if required"
+  block:
+    - name: "Clear processed facts"
+      set_fact:
+        processed_file_facts: []
+    - name: "Copy inventory file to remote"
+      include_tasks: copy-inventory-file-to-remote.yml
+      vars:
+        file_path: "{{ file }}"
+    - name: "Set file facts"
+      set_fact:
+        file_facts: "{{ processed_file_facts|first }}"
+
+- name: "{{ oc_action | capitalize }} OpenShift objects based on static files for '{{ entry.object }} : {{ content.name | default(file | basename) }}'"
+  command: >
+    oc {{ oc_action }} \
+       {{ target_namespace }} \
+       -f {{ file_facts.oc_path }} \
+       {{ (oc_action == 'delete') | ternary(' --ignore-not-found', '') }}
+  no_log: "{{ no_log }}"
+  register: command_result
+  failed_when:
+    - command_result.rc != 0
+    - "'AlreadyExists' not in command_result.stderr"

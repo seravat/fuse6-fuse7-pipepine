@@ -1,0 +1,83 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: ocp-pipeline
+  annotations:
+    openshift.io/display-name: OCP Pipeline 
+    description: OpenShift Jenkinsfile Strategy Pipeline
+    iconClass: fa-cube
+    tags: jenkins-pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: "${NAME}"
+      name: "${NAME}-pipeline"
+      type: pipeline
+      app: "${NAME}"
+    name: "${NAME}-pipeline"
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: "${PIPELINE_CONTEXT_DIR}"
+      git:
+        ref: "${PIPELINE_SOURCE_REPOSITORY_REF}"
+        uri: "${PIPELINE_SOURCE_REPOSITORY_URL}"
+      type: Git
+      sourceSecret:
+        name: "${PIPELINE_SOURCE_SECRET}"
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+    - type: ConfigChange
+    - type: GitLab
+      gitlab:
+        secret: "${GITLAB_WEBHOOK}"
+    - type: Generic
+      generic:
+        secret: "${GENERIC_WEBHOOK}"
+parameters:
+- name: NAME
+  displayName: Name
+  description: The name assigned to all objects and the resulting imagestream.
+  required: true
+  value: s2i-app
+- name: PIPELINE_SOURCE_REPOSITORY_URL
+  displayName: Git Repository URL
+  description: The URL of the repository with your Jenkinsfile.
+  required: true
+  value: https://github.com/rht-labs/Jenkinsfiles
+- name: PIPELINE_SOURCE_REPOSITORY_REF
+  displayName: Git Reference
+  description: Set this to a branch name, tag or other ref of your repository if you
+    are not using the default (master) branch.
+  value: master
+- name: PIPELINE_CONTEXT_DIR
+  displayName: Git Context Directory for Jenkinsfile
+  description: Set this to the directory where the Jenkinsfile is if not using the
+    default root directory
+- name: GENERIC_WEBHOOK
+  displayName: Generic Webook
+  description: OCP secret string to configure a Generic webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: GITLAB_WEBHOOK
+  displayName: Gitlab Webook
+  description: OCP secret string to configure a Gitlab webhook
+  generate: expression
+  from: "[a-zA-Z0-9]{20}"
+- name: PIPELINE_SOURCE_SECRET
+  displayName: Secret for git repository
+  description: The name of the OCP secret that has credentials for the pipeline git
+    repository
+  value: gitlab-auth
+labels:
+  template: ocp-pipeline-template

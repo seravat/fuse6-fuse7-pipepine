@@ -1,0 +1,31 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: fuse7cxfRest-pipeline
+    build: fuse7cxfRest-pipeline
+    name: fuse7cxfRest-pipeline
+    template: ocp-pipeline-template
+    type: pipeline
+  name: fuse7cxfRest-pipeline
+  namespace: cicd
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: {}
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: >-
+        https://github.com/seravat/fuse6_to_fuse7
+    sourceSecret:
+      name: github-secret
+    type: Git
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline
+  successfulBuildsHistoryLimit: 5

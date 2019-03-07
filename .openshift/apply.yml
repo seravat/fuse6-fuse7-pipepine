@@ -1,0 +1,4 @@
+---
+- hosts: seed-hosts
+  roles:
+    - { role: roles/openshift-applier/roles/openshift-applier }

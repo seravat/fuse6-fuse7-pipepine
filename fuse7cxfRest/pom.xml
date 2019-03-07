@@ -264,6 +264,7 @@
 
           </startupFeatures>
           <startupBundles>
+          	<bundle>mvn:com.customer.app/artifacts/1.0-SNAPSHOT</bundle>
           	<bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
 
           </startupBundles>

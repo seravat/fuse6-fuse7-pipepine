@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Route
 spec:
   port:
-    targetPort: 9098
+    targetPort: fuse7cxfrest-rest
   to:
     kind: Service
-    name: fuse7cxfrest-rest
+    name: fuse7cxfrest
     weight: 100
   wildcardPolicy: None
 status: {}

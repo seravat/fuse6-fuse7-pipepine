@@ -1,0 +1,28 @@
+namespace_dev: dev
+namespace_release: release
+
+sample_app_vars_dev:
+  NAME: nodejs-sample
+  NAMESPACE: "{{ namespace_dev }}"
+  SOURCE_REPOSITORY_URL: "https://github.com/welshstew/e2e-pipeline-sample.git"
+  CONTEXT_DIR: "/nodejs-ex"
+sample_app_vars_release:
+  NAME: nodejs-sample
+  NAMESPACE: "{{ namespace_release }}"
+
+
+openshift_cluster_content:
+- object: node-sample
+  content:
+  - name: Sample Node Application DEV
+    template: "{{ inventory_dir }}/templates/node-dev.yml"
+    params_from_vars: "{{ sample_app_vars_dev }}"
+    namespace: "{{ namespace_dev }}"
+    tags:
+    - dev
+  - name: Sample Node Application RELEASE
+    template: "{{ inventory_dir }}/templates/node-release.yml"
+    params_from_vars: "{{ sample_app_vars_release }}"
+    namespace: "{{ namespace_release }}"
+    tags:
+    - release
