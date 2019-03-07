@@ -100,7 +100,7 @@ pipeline {
                             echo "Using project: ${openshift.project()}"
                             sh '''
                                 cd fuse7cxfRest
-                                mvn fabric8:deploy -Dfabric8.generator.from=openshift/jboss-fuse70-karaf-openshift:1.0
+                                mvn fabric8:deploy --settings settings.xml -Dfabric8.generator.from=openshift/jboss-fuse70-karaf-openshift:1.0
                             '''
                             // openshift.startBuild("${APP_NAME}","--follow","--wait")
                         }
