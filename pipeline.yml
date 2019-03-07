@@ -2,12 +2,12 @@ apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   labels:
-    app: fuse7cxfRest-pipeline
-    build: fuse7cxfRest-pipeline
-    name: fuse7cxfRest-pipeline
+    app: fuse7cxfrest-pipeline
+    build: fuse7cxfrest-pipeline
+    name: fuse7cxfrest-pipeline
     template: ocp-pipeline-template
     type: pipeline
-  name: fuse7cxfRest-pipeline
+  name: fuse7cxfrest-pipeline
   namespace: cicd
 spec:
   failedBuildsHistoryLimit: 5
