@@ -3,12 +3,6 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.customer.app</groupId>
-    <artifactId>core</artifactId>
-    <version>1.0</version>
-  </parent>
-
   <groupId>com.customer.app</groupId>
   <artifactId>fuse7cxfRest</artifactId>
   <version>1.0</version>
