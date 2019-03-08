@@ -123,6 +123,7 @@
     <dependency>
   		<groupId>com.customer.app</groupId>
   		<artifactId>artifacts</artifactId>
+        <version>1.0-20190308.110857-1</version>
 	</dependency>
 
 
