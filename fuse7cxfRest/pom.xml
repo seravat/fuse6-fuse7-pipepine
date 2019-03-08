@@ -30,6 +30,13 @@
         </snapshotRepository>
     </distributionManagement>
 
+  <repositories>
+    <repository>
+      <id>maven-group</id>
+      <url>http://nexus-nexus.192.168.64.3.nip.io/repository/maven-public/</url>
+    </repository>
+  </repositories>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-bundle-plugin>2.3.7</version.maven-bundle-plugin>
