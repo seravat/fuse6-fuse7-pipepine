@@ -138,7 +138,7 @@
     <dependency>
   		<groupId>com.customer.app</groupId>
   		<artifactId>artifacts</artifactId>
-        <version>1.0-20190308.162255-11</version>
+        <version>1.0-SNAPSHOT</version>
 	</dependency>
 
 
@@ -267,6 +267,7 @@
             <feature>camel-jms</feature>
             <feature>camel-cxf</feature>
             <feature>camel-activemq</feature>
+            <feature>camel-jaxb</feature>
             <feature>kubernetes-client</feature>
             <feature>openshift-client</feature>
             <feature>fabric8-karaf-checks</feature>
